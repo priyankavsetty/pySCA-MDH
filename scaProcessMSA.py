@@ -87,7 +87,8 @@ if __name__ =='__main__':
                                 if options.pdbid is not None:
                                                 print("And...ignoring the PDB file...")
                                                 options.pdbid = None
-                                options.refpos = range(len(options.refseq))+1
+#                                 options.refpos = range(len(options.refseq))+1
+                                options.refpos = range(len(options.refseq)+1)
                  
                 if options.refseq is not None and options.refpos is not None:
                                 print("Using the reference sequence and position list...")
@@ -210,7 +211,7 @@ if __name__ =='__main__':
                                 ats_tmp = [line.rstrip('\n') for line in f]
                                 f.close()
                         else:
-                                print 'here!'
+                                print ('here!')
                                 ats_tmp = range(len(sequences_ori[0]))
                         sequences, ats = sca.makeATS(sequences_full, ats_tmp, s_tmp, i_ref, options.truncate)
                 except:

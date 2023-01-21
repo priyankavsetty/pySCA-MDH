@@ -45,8 +45,8 @@ from optparse import OptionParser
 
 # (this directory should contain the file 'pfamseq.txt' from
 # ftp://ftp.sanger.ac.uk/pub/databases/Pfam/current_release/database_files/
-path2pfamseq = '~/Documents/Packages/pfamseq.txt'
-
+# path2pfamseq = '~/Documents/Packages/pfamseq.txt'
+path2pfamseq = 'Inputs/pfamseq 2.txt'
 # the location of your PDB structures
 path2structures = 'Inputs/'
 
@@ -93,7 +93,9 @@ class Annot:
 ##########################################################################################
 # ALIGNMENT PROCESSING
 
+seq = ''
 def readAlg(filename):
+    global seq
     ''' Read in a multiple sequence alignment in fasta format, and return the 
     headers and sequences.
 
@@ -105,7 +107,8 @@ def readAlg(filename):
             if notfirst > 0: sequences.append(seq.replace('\n','').upper())
             headers.append(line[1:].replace('\n',''))
             seq = ''; notfirst = 1
-        elif line != '\n': seq += line
+        elif line != '\n': 
+            seq += line
     sequences.append(seq.replace('\n','').upper())
     return headers, sequences
 
@@ -212,7 +215,8 @@ def MSAsearch(hd, algn, seq, species = None, path2_algprog=path2needle):
         f.close()
         args = ['ggsearch36','-M 1-'+str(len(algn[0])),'-b','1','-m 8','tmp/PDB_seq.fasta','tmp/algn_seq.fasta']
         output = subprocess.check_output(args)
-        i_0 = [i for i in range(len(hd)) if output.split('\t')[1] in hd[i]]  
+        i_0 = [i for i in range(len(hd)) if output.split(b'\t')[1] in bytes(hd[i],'utf-8')]
+#         i_0 = [i for i in range(len(hd)) if output.split('\t')[1] in hd[i]]  
         if species is not None:
             strseqnum = key_list[i_0[0]]
         else:
@@ -468,6 +472,8 @@ def filterPos(alg, seqw=[1], max_fracgaps=.2):
        >>> alg_tr, selpos = filterPos(alg, seqw, max_fracgaps=.2) 
 
     '''
+#     print("alg",len(alg))
+#     print(len(alg[0]))
     Nseq, Npos = len(alg), len(alg[0])
     if len(seqw) == 1: seqw = np.tile(1, (1, Nseq))
     # Fraction of gaps, taking into account sequence weights:
@@ -478,7 +484,7 @@ def filterPos(alg, seqw=[1], max_fracgaps=.2):
     selpos = [i for i in range(Npos) if gapsperpos[i] < max_fracgaps]
     # Truncation:
     alg_tr = [''.join([alg[s][i] for i in selpos]) for s in range(Nseq)]
-    return alg_tr, selpos     
+    return alg_tr, selpos 
 
 def randSel(seqw, Mtot, keepSeq = []):
     ''' Random selection of Mtot sequences, drawn with weights and without replacement.
@@ -607,6 +613,7 @@ def svdss(X, k=6):
       >>> u, s ,v = svdss(X, k=6)
 
     '''
+    print(X)
     u,s,vt = scipy.sparse.linalg.svds(X, k)
     idx = (-s).argsort()   
     s = s[idx]; u = u[:,idx]
@@ -990,6 +997,7 @@ def icList(Vpica, kpos, Csca, p_cut=0.95):
     cutoff = list()
     scaled_pdf = list()
     all_fits = list()
+    print(Vpica)
     for k in range(kpos):
         pd = t.fit(Vpica[:,k])
         all_fits.append(pd)
@@ -1185,6 +1193,8 @@ def randAlg(frq, Mseq):
        >>> msa_rand = randAlg(frq, Mseq) 
 
     '''
+    frq = frq.astype(int)
+    print(frq)
     Npos = frq.shape[0]
     msa_rand = np.zeros((Mseq, Npos), dtype=int)
     for i in range(Npos):
@@ -1194,6 +1204,7 @@ def randAlg(frq, Mseq):
         np.random.shuffle(col)
         msa_rand[:,i] = col
     return msa_rand
+
 
 def randomize(msa_num, Ntrials, seqw=1, norm='frob', lbda=0, Naa=20, kmax=6):
     ''' Randomize the alignment while preserving the frequencies of amino acids at each 

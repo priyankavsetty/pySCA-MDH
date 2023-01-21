@@ -85,7 +85,7 @@ if __name__ == '__main__':
                 except:
                     taxID.append('')
         end = time.clock()
-        print "Look up for Tax IDs complete. Time: %f" % (end-start)
+        print ("Look up for Tax IDs complete. Time: %f" % (end-start))
 
         # Collect records with lineage information
         print("Collecting taxonomy information...")
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             except:
                 records.append('')
         end = time.clock()
-        print "Look up for taxonomy information complete. Time: %f" % (end-start)
+        print ("Look up for taxonomy information complete. Time: %f" % (end-start))
 
         # Write to the output fasta file.
         s_records = list()
