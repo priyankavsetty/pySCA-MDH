@@ -1,8 +1,17 @@
-import functions_SCA
+#!/usr/bin/env python
+# Author: Priyanka V.Setty
+# Date: 2023-01-20
+# Usage: python pySCA.py -i <input pickle file from SCA calculations> -t <"title for di plot"> -d <"file name for saving di values"> -p < file name for saving the conservation plot>
+# Purpose: Takes the pySCA calculations as input and plots the conservation plot (first order statistics)
+
+# imports
+
+from functions_SCA import plot_first_order_statistics
 from functions_SCA import NumpyArrayEncoder
 from argparse import ArgumentParser
 import argparse
 import matplotlib.pyplot as plt
+import numpy as np
 import pickle
 import json
 from json import JSONEncoder
@@ -36,4 +45,6 @@ plot_di.savefig(output_plot, dpi = 100)
 json_object = json.dumps(out_file, cls = NumpyArrayEncoder)
 with open(output_file, "w") as outfile:
     outfile.write(json_object)
+
+
 

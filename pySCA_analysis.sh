@@ -10,21 +10,21 @@ n=$3
 outdir=$4
 title=$5
 
-aln=$(echo "outdir/aligned_$n").fasta
-anotSeq=$(echo "outdir/annotated_$n").an
-db=$(echo "outdir/SCA_$n").db
-json=$(echo "outdir/di_$n").json
-plt=$(echo "outdir/di_plot_$n").png
+aln=$(echo "Inputs/aligned_$n").fasta
+anotSeq=$(echo "Inputs/annotated_$n").an
+db=$(echo "Outputs/annotated_$n").db
+json=$(echo "Inputs/di_$n").json
+plt=$(echo "Inputs/di_plot_$n").png
 
 
 # Step 1: run mafft alignment on input fasta sequences and save the aligned file in fasta format
 mafft --6merpair --thread -1 --keeplength --addfragments $in $ref > $aln
 
 # Step 2: Annotate the MSA (need to run these commands in the installed pySCA folder )
-./annotate_MSA.py $aln -o $anotSeq -a 'pfam'
+./annotate_MSA.py $f -o $anotSeq -a 'pfam'
 
 # Step 3: Process the MSA
-./scaProcessMSA.py $anotSeq -s $ref -c A -f 'Escherichia coli' -t -n
+./scaProcessMSA.py $anotSeq -s 2pwz -c A -f 'Escherichia coli' -t -n
 
 # Step 4: SCA core calculations
 ./scaCore.py $db

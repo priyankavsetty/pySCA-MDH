@@ -2,11 +2,13 @@
 # Author: Priyanka V.Setty
 # Date: 2023-01-20
 # Usage: functions for SCA analysis
+
 # imports
 from __future__ import division
 
 import argparse
 import matplotlib.pyplot as plt
+import numpy as np
 import pickle
 import json
 from json import JSONEncoder
